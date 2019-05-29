@@ -12,17 +12,7 @@ namespace Lab_23_Entity.Controllers
         ShopDBEntities db = new ShopDBEntities();
         public ActionResult Index()
         {
-            User u = (User)Session["LoggedInUser"];
-            ViewBag.User = u;
-
-            // LINQ code that didn't end up working
-            //var user = Session["LoggedInUser"];
-            //List<User> p = (List<User>)user;
-
-            //User u = p[0];
-
-            //ViewBag.User = u;
-
+            Session["LoggedInUser"] = "";
             return View();
         }
 
@@ -68,11 +58,23 @@ namespace Lab_23_Entity.Controllers
                 if (u.UserName == UserName && u.PassWord == PassWord)
                 {
                     Session["LoggedInUser"] = u;
-                    return RedirectToAction("Index");
+                    ViewBag.Shop = db.Items;
+                    
+                    return RedirectToAction("Shop");
                 }
             }
             Session["Error"] = "Username and Password don't match. Please try again.";
             return RedirectToAction("Login");
+        }
+
+        public ActionResult Shop()
+        {
+            User u = (User)Session["LoggedInUser"];
+            ViewBag.User = u;
+            ViewBag.Shop = db.Items;
+            return View();
+
+
         }
     }
 }

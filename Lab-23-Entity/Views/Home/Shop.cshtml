@@ -1,0 +1,10 @@
+﻿@using Lab_23_Entity.Models
+
+<h2>Welcome to our SUPER-COOL ALL-THINGS-MOTORCYLE Shop</h2>
+<h3>Welcome @ViewBag.User.UserName - Your Credit Balance is @ViewBag.User.Balance</h3>
+
+@{foreach(Item i in ViewBag.Shop)
+    {
+    <p> @i.Name - @i.Description - @i.Price - @i.Quantity</p>
+    }
+}
