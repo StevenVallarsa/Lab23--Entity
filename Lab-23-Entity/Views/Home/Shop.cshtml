@@ -1,8 +1,14 @@
 ﻿@using Lab_23_Entity.Models
 
 <h2>Welcome to our SUPER-COOL ALL-THINGS-MOTORCYLE Shop</h2>
-<h3>Welcome @ViewBag.User.UserName - Your Credit Balance is $@ViewBag.User.Balance</h3>
-    
+@{ if(Session["LoggedInUser"] != null)
+    {
+        <h3>Welcome @ViewBag.User.UserName - Your Credit Balance is $@ViewBag.User.Balance</h3>
+    }
+
+}
+
+
 <h2 style="color:red">@Session["Error"]</h2>
 
 <div class="row" style="color:#ba9494;margin-left:5%">
@@ -30,23 +36,30 @@
             <div class="col-lg-5 align-center">
                 @i.Description
             </div>
-            <div class="col-lg-2 align-right">
+            <div class="col-lg-2 alight-center">
                 @i.Price
             </div>
-            <div class="col-lg-1 align-right">
+            <div class="col-lg-1 align-center">
                 @i.Quantity
             </div>
-            @if (Session["LoggedInUser"].ToString() != "")
+
+            @if (Session["LoggedInUser"] != null)
             {
                 int id = i.id;
                 <form action="Buy">
                     <input type="hidden" name="id" value="@id" />
-                    <input type="submit" />
+                    <input type="submit" value="BUY" />
                 </form>
             }
         </div>
     }
 }
-<form action="Logout" method="post">
-    <input type="submit" />
-</form>
+<p></p>
+@{ 
+    if (Session["LoggedInUser"] != null)
+    {
+        <form action="Logout" method="post">
+            <p><input type="submit" value="LOG OUT" /> We're sorry to see you go </p>
+        </form>
+    }
+}

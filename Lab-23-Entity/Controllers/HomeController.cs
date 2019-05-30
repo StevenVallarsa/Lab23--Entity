@@ -73,6 +73,11 @@ namespace Lab_23_Entity.Controllers
 
         public ActionResult Shop()
         {
+            if (Session["LoggedInUser"] == null)
+            {
+                Session["Error"] = "";
+            }
+
             User u = (User)Session["LoggedInUser"];
             ViewBag.User = u;
             ViewBag.Shop = db.Items;
@@ -84,9 +89,9 @@ namespace Lab_23_Entity.Controllers
             User u = (User)Session["LoggedInUser"];
             Item i = db.Items.Find(id);
 
-            if (i.Price < u.Balance && i.Quantity > 0)
+            if (i.Price <=  u.Balance && i.Quantity > 0)
             {
-                i.Quantity -= 1;
+                i.Quantity--;
                 u.Balance -= i.Price;
 
                 db.Users.AddOrUpdate(u);
@@ -115,6 +120,12 @@ namespace Lab_23_Entity.Controllers
         public ActionResult Error()
         {
             return View();
+        }
+
+        public ActionResult Logout()
+        {
+            Session["LoggedInUser"] = null;
+            return RedirectToAction("Index");
         }
 
 
