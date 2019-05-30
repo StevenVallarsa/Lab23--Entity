@@ -49,6 +49,11 @@ namespace Lab_23_Entity.Controllers
 
         public ActionResult Login()
         {
+            if (Session["LoggedInUser"] != null)
+            {
+                Session["Error"] = "";
+            }
+
             return View();
         }
 
@@ -63,7 +68,8 @@ namespace Lab_23_Entity.Controllers
                 {
                     Session["LoggedInUser"] = u;
                     ViewBag.Shop = db.Items;
-                    
+
+                    Session["Error"] = "";
                     return RedirectToAction("Shop");
                 }
             }

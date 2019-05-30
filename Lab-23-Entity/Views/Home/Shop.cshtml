@@ -3,7 +3,7 @@
 <h2>Welcome to our SUPER-COOL ALL-THINGS-MOTORCYLE Shop</h2>
 @{ if(Session["LoggedInUser"] != null)
     {
-        <h3>Welcome @ViewBag.User.UserName - Your Credit Balance is $@ViewBag.User.Balance</h3>
+        <h3>Welcome <b>@ViewBag.User.UserName</b> - Your Credit Balance is $@ViewBag.User.Balance</h3>
     }
 
 }
@@ -59,7 +59,7 @@
     if (Session["LoggedInUser"] != null)
     {
         <form action="Logout" method="post">
-            <p><input type="submit" value="LOG OUT" /> We're sorry to see you go </p>
+            <p>Once you're done shopping, please <input type="submit" value="LOG OUT" /> (But we're sorry to see you go.) </p>
         </form>
     }
 }
