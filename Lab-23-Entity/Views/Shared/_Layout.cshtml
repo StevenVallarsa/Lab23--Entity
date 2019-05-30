@@ -23,10 +23,8 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    @if (Session["LoggedInUser"].ToString() != "")
-                    {
-                        <li>@Html.ActionLink("Shop", "Shop", "Home")</li>
-                    }
+                    <li>@Html.ActionLink("Shop", "Shop", "Home")</li>
+                    
                 </ul>
             </div>
         </div>

@@ -1,10 +1,52 @@
 ﻿@using Lab_23_Entity.Models
 
 <h2>Welcome to our SUPER-COOL ALL-THINGS-MOTORCYLE Shop</h2>
-<h3>Welcome @ViewBag.User.UserName - Your Credit Balance is @ViewBag.User.Balance</h3>
+<h3>Welcome @ViewBag.User.UserName - Your Credit Balance is $@ViewBag.User.Balance</h3>
+    
+<h2 style="color:red">@Session["Error"]</h2>
 
-@{foreach(Item i in ViewBag.Shop)
+<div class="row" style="color:#ba9494;margin-left:5%">
+    <div class="col-lg-2 align-center">
+        Name
+    </div>
+    <div class="col-lg-5 align-center">
+        Description
+    </div>
+    <div class="col-lg-2 align-center">
+        Price
+    </div>
+    <div class="col-lg-1 align-center">
+        Qty
+    </div>
+
+</div>
+
+@{foreach (Item i in ViewBag.Shop)
     {
-    <p> @i.Name - @i.Description - @i.Price - @i.Quantity</p>
+        <div class="row" style="margin-left:5%">
+            <div class="col-lg-2 align-center">
+                @i.Name
+            </div>
+            <div class="col-lg-5 align-center">
+                @i.Description
+            </div>
+            <div class="col-lg-2 align-right">
+                @i.Price
+            </div>
+            <div class="col-lg-1 align-right">
+                @i.Quantity
+            </div>
+            @if (Session["LoggedInUser"].ToString() != "")
+            {
+                int id = i.id;
+                <form action="Buy">
+                    <input type="hidden" name="id" value="@id" />
+                    <input type="submit" />
+                </form>
+            }
+        </div>
     }
 }
+<form action="Logout" method="post">
+    <input type="submit" />
+</form>

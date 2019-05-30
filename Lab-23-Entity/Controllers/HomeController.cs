@@ -1,6 +1,7 @@
 ﻿using Lab_23_Entity.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,7 +13,10 @@ namespace Lab_23_Entity.Controllers
         ShopDBEntities db = new ShopDBEntities();
         public ActionResult Index()
         {
-            Session["LoggedInUser"] = "";
+            if (Session["LoggedInUser"] != null)
+            {
+                return RedirectToAction("Shop");
+            }
             return View();
         }
 
@@ -40,7 +44,7 @@ namespace Lab_23_Entity.Controllers
             db.Users.Add(u);
             db.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Login");
         }
 
         public ActionResult Login()
@@ -73,8 +77,46 @@ namespace Lab_23_Entity.Controllers
             ViewBag.User = u;
             ViewBag.Shop = db.Items;
             return View();
-
-
         }
+
+        public ActionResult Buy(int id)
+        {
+            User u = (User)Session["LoggedInUser"];
+            Item i = db.Items.Find(id);
+
+            if (i.Price < u.Balance && i.Quantity > 0)
+            {
+                i.Quantity -= 1;
+                u.Balance -= i.Price;
+
+                db.Users.AddOrUpdate(u);
+                db.Items.AddOrUpdate(i);
+                db.SaveChanges();
+
+                User uu = (User)Session["LoggedInUser"];
+
+                ViewBag.Shop = uu;
+
+            }
+            else if(i.Quantity < 1)
+            {
+                Session["Error"] = $"Sorry, there aren't any more {i.Name}s left.";
+            }
+            else
+            {
+                Session["Error"] = $"You only have ${u.Balance} left in your account, but that item costs ${i.Price}.";
+
+                return RedirectToAction("Error");
+            }
+
+            return RedirectToAction("Shop");
+        }
+
+        public ActionResult Error()
+        {
+            return View();
+        }
+
+
     }
 }
