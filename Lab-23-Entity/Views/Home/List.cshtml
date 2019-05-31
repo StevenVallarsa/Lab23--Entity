@@ -1,0 +1,44 @@
+﻿@using Lab_23_Entity.Models
+
+<h2>Welcome to our SUPER-COOL ALL-THINGS-MOTORCYLE Shop</h2>
+<h3>Here's Your List of Purchases</h3>
+
+<div class="row" style="color:#ba9494;margin-left:5%">
+    <div class="col-lg-2 align-center">
+        Name
+    </div>
+    <div class="col-lg-5 align-center">
+        Description
+    </div>
+    <div class="col-lg-2 align-center">
+        Price
+    </div>
+
+</div>
+
+
+@{
+    User user = (User)Session["LoggedInUser"];
+    foreach (UserItem ui in ViewBag.UserItems)
+    {
+        if(user.id == ui.UserID)
+        {
+            Item i = ViewBag.Items[ui.ItemID-1];
+            <div class="row" style="margin-left:5%">
+                <div class="col-lg-2 align-center">
+                    @i.Name
+                </div>
+                <div class="col-lg-5 align-center">
+                    @i.Description
+                </div>
+                <div class="col-lg-2 alight-center">
+                    @i.Price
+                </div>
+
+            </div>
+
+        }
+
+    }
+}
+<p></p>

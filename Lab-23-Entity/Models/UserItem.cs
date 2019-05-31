@@ -15,8 +15,8 @@ namespace Lab_23_Entity.Models
     public partial class UserItem
     {
         public int UserItemId { get; set; }
-        public Nullable<int> UserID { get; set; }
-        public Nullable<int> ItemID { get; set; }
+        public int UserID { get; set; }
+        public int ItemID { get; set; }
     
         public virtual Item Item { get; set; }
         public virtual User User { get; set; }

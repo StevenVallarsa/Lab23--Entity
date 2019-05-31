@@ -94,7 +94,6 @@ namespace Lab_23_Entity.Controllers
         {
             User u = (User)Session["LoggedInUser"];
             Item i = db.Items.Find(id);
-            List<UserItem> ui = db.UserItems.ToList();  // create object from UserItem DB
 
             if (i.Price <=  u.Balance && i.Quantity > 0)
             {
@@ -103,6 +102,12 @@ namespace Lab_23_Entity.Controllers
 
                 db.Users.AddOrUpdate(u);
                 db.Items.AddOrUpdate(i);
+
+                UserItem ui = new UserItem(); // create new "UserItem" object
+                ui.ItemID = i.id; // add to ItemID column the "id" from Item id key
+                ui.UserID = u.id; // add to UserID column the "id" from User id key
+
+                db.UserItems.AddOrUpdate(ui); // 
 
                 db.SaveChanges();
 
@@ -134,6 +139,16 @@ namespace Lab_23_Entity.Controllers
         {
             Session["LoggedInUser"] = null;
             return RedirectToAction("Index");
+        }
+
+        public ActionResult List(int id)
+        {
+            List<Item> i = db.Items.ToList();
+            List<UserItem> ui = db.UserItems.ToList();
+            ViewBag.Items = i;
+            ViewBag.UserItems = ui;
+
+            return View();
         }
 
 

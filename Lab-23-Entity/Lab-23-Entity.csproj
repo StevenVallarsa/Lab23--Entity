@@ -221,6 +221,7 @@
     <Content Include="Views\UserItems\Details.cshtml" />
     <Content Include="Views\UserItems\Edit.cshtml" />
     <Content Include="Views\UserItems\Index.cshtml" />
+    <Content Include="Views\Home\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

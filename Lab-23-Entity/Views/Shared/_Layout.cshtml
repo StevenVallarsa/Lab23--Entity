@@ -26,7 +26,12 @@
                     }
 
                     <li>@Html.ActionLink("Register", "Register", "Home")</li>
-                    <li>@Html.ActionLink("Shop", "Shop", "Home")</li>  
+                    <li>@Html.ActionLink("Shop", "Shop", "Home")</li>
+
+                    @if(Session["LoggedInUser"] != null)
+                    {
+                        <li>@Html.ActionLink("List", "List", "Home")</li>
+                    }
                 </ul>
             </div>
         </div>
