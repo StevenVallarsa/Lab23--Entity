@@ -141,7 +141,7 @@ namespace Lab_23_Entity.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult List(int id)
+        public ActionResult List()
         {
             List<Item> i = db.Items.ToList();
             List<UserItem> ui = db.UserItems.ToList();
