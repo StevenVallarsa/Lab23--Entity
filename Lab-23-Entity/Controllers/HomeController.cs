@@ -94,6 +94,7 @@ namespace Lab_23_Entity.Controllers
         {
             User u = (User)Session["LoggedInUser"];
             Item i = db.Items.Find(id);
+            List<UserItem> ui = db.UserItems.ToList();  // create object from UserItem DB
 
             if (i.Price <=  u.Balance && i.Quantity > 0)
             {
@@ -102,6 +103,7 @@ namespace Lab_23_Entity.Controllers
 
                 db.Users.AddOrUpdate(u);
                 db.Items.AddOrUpdate(i);
+
                 db.SaveChanges();
 
                 User uu = (User)Session["LoggedInUser"];

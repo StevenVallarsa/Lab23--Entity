@@ -27,5 +27,6 @@ namespace Lab_23_Entity.Models
     
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserItem> UserItems { get; set; }
     }
 }

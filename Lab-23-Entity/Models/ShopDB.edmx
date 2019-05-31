@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ShopDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ShopDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Items">
           <Key>
             <PropertyRef Name="id" />
@@ -15,6 +15,14 @@
           <Property Name="Quantity" Type="int" />
           <Property Name="Price" Type="decimal" Precision="6" Scale="2" />
         </EntityType>
+        <EntityType Name="UserItems">
+          <Key>
+            <PropertyRef Name="UserItemId" />
+          </Key>
+          <Property Name="UserItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="ItemID" Type="int" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="id" />
@@ -24,12 +32,44 @@
           <Property Name="PassWord" Type="nvarchar" MaxLength="30" />
           <Property Name="Balance" Type="decimal" Precision="6" Scale="2" />
         </EntityType>
+        <Association Name="FK_ItemID">
+          <End Role="Items" Type="Self.Items" Multiplicity="0..1" />
+          <End Role="UserItems" Type="Self.UserItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Items">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserItems">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserID">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="UserItems" Type="Self.UserItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserItems">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="ShopDBModelStoreContainer">
           <EntitySet Name="Items" EntityType="Self.Items" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserItems" EntityType="Self.UserItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ItemID" Association="Self.FK_ItemID">
+            <End Role="Items" EntitySet="Items" />
+            <End Role="UserItems" EntitySet="UserItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserID" Association="Self.FK_UserID">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserItems" EntitySet="UserItems" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ShopDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -42,6 +82,7 @@
           <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Quantity" Type="Int32" />
           <Property Name="Price" Type="Decimal" Precision="6" Scale="2" />
+          <NavigationProperty Name="UserItems" Relationship="ShopDBModel.FK_ItemID" FromRole="Item" ToRole="UserItem" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -51,11 +92,55 @@
           <Property Name="UserName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="PassWord" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="Balance" Type="Decimal" Precision="6" Scale="2" />
+          <NavigationProperty Name="UserItems" Relationship="ShopDBModel.FK_UserID" FromRole="User" ToRole="UserItem" />
         </EntityType>
         <EntityContainer Name="ShopDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Items" EntityType="Self.Item" />
           <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserItems" EntityType="ShopDBModel.UserItem" />
+          <AssociationSet Name="FK_ItemID" Association="ShopDBModel.FK_ItemID">
+            <End Role="Item" EntitySet="Items" />
+            <End Role="UserItem" EntitySet="UserItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserID" Association="ShopDBModel.FK_UserID">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserItem" EntitySet="UserItems" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="UserItem">
+          <Key>
+            <PropertyRef Name="UserItemId" />
+          </Key>
+          <Property Name="UserItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="ItemID" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="ShopDBModel.FK_ItemID" FromRole="UserItem" ToRole="Item" />
+          <NavigationProperty Name="User" Relationship="ShopDBModel.FK_UserID" FromRole="UserItem" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_ItemID">
+          <End Type="ShopDBModel.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="ShopDBModel.UserItem" Role="UserItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserItem">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserID">
+          <End Type="ShopDBModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ShopDBModel.UserItem" Role="UserItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserItem">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -80,6 +165,15 @@
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="PassWord" ColumnName="PassWord" />
                 <ScalarProperty Name="Balance" ColumnName="Balance" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserItems">
+            <EntityTypeMapping TypeName="ShopDBModel.UserItem">
+              <MappingFragment StoreEntitySet="UserItems">
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserItemId" ColumnName="UserItemId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
